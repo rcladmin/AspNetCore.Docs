@@ -5,29 +5,28 @@
         "mspOfferName": {
             "type": "string",
             "metadata": {
-                "description": "Specify a unique name for your offer"
+                "description": "The name for the Managed Service Provider offering"
             },
             "defaultValue": "RCL Cloud for Business"
-
         },
         "mspOfferDescription": {
             "type": "string",
             "metadata": {
-                "description": "Name of the Managed Service Provider offering"
+                "description": "The description of the Managed Service Provider offering"
             },
-            "defaultValue": "Managed services for business applications"
+            "defaultValue": "RCL managed services for cloud business applications"
         },
         "managedByTenantId": {
             "type": "string",
             "metadata": {
-                "description": "Specify the tenant id of the Managed Service Provider"
+                "description": "The tenant id of the Managed Service Provider"
             },
             "defaultValue": "252f231f-8241-4431-abc5-8cf97fd9505e"
         },
         "authorizations": {
             "type": "array",
             "metadata": {
-                "description": "Specify an array of objects, containing tuples of Azure Active Directory principalId, a Azure roleDefinitionId, and an optional principalIdDisplayName. The roleDefinition specified is granted to the principalId in the provider's Active Directory and the principalIdDisplayName is visible to customers."
+                "description": "The authorizations requested by the Managed Service Provider."
             },
             "defaultValue": [
                 { 
@@ -36,6 +35,9 @@
                     "principalIdDisplayName": "RCL_MSP_Admins" 
                 }
             ]
+        },
+        "rgName": {
+            "type": "string"
         }              
     },
     "variables": {
@@ -45,7 +47,7 @@
     "resources": [
         {
             "type": "Microsoft.ManagedServices/registrationDefinitions",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2019-06-01",
             "name": "[variables('mspRegistrationName')]",
             "properties": {
                 "registrationDefinitionName": "[parameters('mspOfferName')]",
@@ -55,14 +57,30 @@
             }
         },
         {
-            "type": "Microsoft.ManagedServices/registrationAssignments",
-            "apiVersion": "2019-09-01",
-            "name": "[variables('mspAssignmentName')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "rgAssignment",
+            "resourceGroup": "[parameters('rgName')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
             ],
-            "properties": {
-                "registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+            "properties":{
+                "mode":"Incremental",
+                "template":{
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.ManagedServices/registrationAssignments",
+                            "apiVersion": "2019-06-01",
+                            "name": "[variables('mspAssignmentName')]",
+                            "properties": {
+                                "registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+                            }
+                        }
+                    ]
+                }
             }
         }
     ],

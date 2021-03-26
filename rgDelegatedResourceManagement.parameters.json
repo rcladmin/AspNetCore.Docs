@@ -1,9 +1,12 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "mspOfferName": {
             "value": "RCL Cloud for Business"
+        },
+        "rgName": {
+            "value": "rclMspBusinessRG"
         },
         "mspOfferDescription": {
             "value": "RCL Cloud for Business"
@@ -13,11 +16,11 @@
         },
         "authorizations": {
             "value": [
-                {
-                    "principalId": "057429c1-d526-4041-9c0a-8a6663934b85",
+                { 
+                    "principalId": "057429c1-d526-4041-9c0a-8a6663934b85", 
                     "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
-                    "principalIdDisplayName": "RCL_MSP_Admins"
-                }
+                    "principalIdDisplayName": "RCL_MSP_Admins" 
+                }   
             ]
         }
     }

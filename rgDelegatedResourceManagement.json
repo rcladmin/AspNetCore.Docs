@@ -37,7 +37,11 @@
             ]
         },
         "rgName": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "The Resource Group name"
+            },
+            "defaultValue": "rclMspBusinessRG"
         }              
     },
     "variables": {
